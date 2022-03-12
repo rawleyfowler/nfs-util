@@ -1,0 +1,63 @@
+#!/bin/bash
+# By: Rawley Fowler <rawley.xzy>
+#	This program is licensed under the GPL v3.0, please read the license for details. You should have a copy of the GPL v3.0 attached.
+# Purpose: This tool creates nfs share records in your /etc/exports file. Then exports the file system using exportfs.
+# Usage: nfs-util DIR HOST1 [HOST2 .. HOSTn] [PERMISSIONS]
+function usage() {
+	echo "Usage: nfs-util -d DIR [-p PERMISSIONS] -n HOST1[,HOST2,HOST3,HOSTn]"
+	printf "\n\t-d DIR\t\t\tSpecify the directory inwhich to share via nfs.\n"
+	printf "\n\t-h \t\t\tDisplay this.\n"
+	printf "\n\t-n HOST1[,HOST2,HOSTN]  Specify which hosts should have access to the nfs share. Multiple hosts sperated by commas.\n"
+	printf "\n\t-p PERMISSIONS\t\tSpecify which permissions should apply to each of the nfs members.\n\n"
+	printf "\n\t-t \t\t\tIf this flag is active, connection testing will occur which will test connectivity of each host, and omit ones that do not connect.\n\n"
+	echo "Example: nfs-util /mnt/nfs_share -d my_pc_2 -n server1,10.1.30.8 -p 'no_root_squash,rw,sync,no_sub_treecheck'"
+	echo "NOTE: permissions default to: (rw,sync,no_sub_treecheck)"
+}
+
+while getopts "thp:n:d:" opt; do
+	case "$opt" in
+		p)
+			params=${OPTARG}
+			;;
+		d)
+			nfs_dir=${OPTARG}
+			;;
+		n)
+			host_slug=${OPTARG}	
+			;;
+		t)
+			test_conn=1
+			;;
+		h)
+			usage
+			exit 0
+			;;
+		*)
+			1>&2 echo "Invalid option: $opt try 'nfs-util -h' for help and examples."
+			exit 1
+			;;
+	esac
+done
+if [ "$host_slug" = "" ] || [ "$nfs_dir" = "" ]; then	
+	1>&2 echo "Error: No directory or host(s) specified. Use -h for help and usage."
+	exit 1
+fi
+if [ "$params" = "" ]; then
+	params="rw,sync,no_sub_treecheck"
+fi
+declare -a hosts
+IFS=","
+out_str="$nfs_dir\t"
+for h in ${host_slug}; do	
+	if [[ "$test_conn" -eq 1 ]]; then	
+		ping -c 1 "$h" 2>&1> /dev/null
+		if [[ ! $? ]]; then
+			1>&2 echo "Could not validate connection to host: $h"
+		else
+			out_str="$out_str $h($params)"
+		fi
+	else
+		out_str="$out_str $h($params)"
+	fi
+done
+echo -e "$out_str"
