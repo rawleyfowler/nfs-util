@@ -60,4 +60,3 @@ for h in ${host_slug}; do
 	fi
 done
 echo -e "$out_str"
-echo "DONE."
