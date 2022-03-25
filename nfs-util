@@ -45,14 +45,13 @@ fi
 if [ "$params" = "" ]; then
 	params="rw,sync,no_subtree_check"
 fi
-declare -a hosts
 IFS=","
 out_str="$nfs_dir\t"
 for h in ${host_slug}; do	
 	if [[ "$test_conn" -eq 1 ]]; then	
 		ping -c 1 "$h" 2>&1> /dev/null
 		if [[ ! $? ]]; then
-			1>&2 echo "Could not validate connection to host: $h"
+			1>&2 echo "Could not validate connection to host: $h, skipping this host..."
 		else
 			out_str="$out_str $h($params)"
 		fi
