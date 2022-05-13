@@ -10,7 +10,7 @@ function usage() {
 	printf "\n\t-n HOST1[,HOST2,HOSTN]  Specify which hosts should have access to the nfs share. Multiple hosts sperated by commas.\n"
 	printf "\n\t-p PERMISSIONS\t\tSpecify which permissions should apply to each of the nfs members.\n\n"
 	printf "\n\t-t \t\t\tIf this flag is active, connection testing will occur which will test connectivity of each host, and omit ones that do not connect.\n\n"
-	echo "Example: nfs-util /mnt/nfs_share -d my_pc_2 -n server1,10.1.30.8 -p 'no_root_squash,rw,sync,no_subtree_check'"
+	echo "Example: nfs-util -d /mnt/nfs_share -n server1,10.1.30.8 -p 'no_root_squash,rw,sync,no_subtree_check'"
 	echo "NOTE: permissions default to: (rw,sync,no_subtree_check)"
 }
 
