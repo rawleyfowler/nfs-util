@@ -1,7 +1,6 @@
-#!/bin/bash
-# By: Rawley Fowler <rawley.xzy>
-#	This program is licensed under the GPL v3.0, please read the license for details. You should have a copy of the GPL v3.0 attached.
-# Purpose: This tool creates nfs share records in your /etc/exports file. Then exports the file system using exportfs.
+#!/bin/bash # By: Rawley Fowler <rawley.xzy>
+# This program is licensed under the GPL v3.0, please read the license for details. You should have a copy of the GPL v3.0 attached.
+# Purpose: This tool creates nfs share record lines.
 # Usage: nfs-util DIR HOST1 [HOST2 .. HOSTn] [PERMISSIONS]
 function usage() {
 	echo "Usage: nfs-util -d DIR [-p PERMISSIONS] -n HOST1[,HOST2,HOST3,HOSTn]"
@@ -14,6 +13,7 @@ function usage() {
 	echo "NOTE: permissions default to: (rw,sync,no_subtree_check)"
 }
 
+test_conn=0
 while getopts "thp:n:d:" opt; do
 	case "$opt" in
 		p)
@@ -38,19 +38,22 @@ while getopts "thp:n:d:" opt; do
 			;;
 	esac
 done
+
 if [ "$host_slug" = "" ] || [ "$nfs_dir" = "" ]; then	
 	1>&2 echo "Error: No directory or host(s) specified. Use -h for help and usage."
 	exit 1
 fi
+
 if [ "$params" = "" ]; then
 	params="rw,sync,no_subtree_check"
 fi
+
 IFS=","
 out_str="$nfs_dir\t"
-for h in ${host_slug}; do	
-	if [[ "$test_conn" -eq 1 ]]; then	
-		ping -c 1 "$h" 2>&1> /dev/null
-		if [[ ! $? ]]; then
+for h in ${host_slug}; do
+    if [ $test_conn -eq 1 ]; then	
+		ping -c 1 "$h"
+		if [ "$?" != "0" ]; then
 			1>&2 echo "Could not validate connection to host: $h, skipping this host..."
 		else
 			out_str="$out_str $h($params)"
@@ -59,4 +62,11 @@ for h in ${host_slug}; do
 		out_str="$out_str $h($params)"
 	fi
 done
-echo -e "$out_str"
+
+# If we haven't added any new systems.
+if [ "$out_str" != "$nfs_dir\t" ]; then
+    echo -e "No systems passed the network test :("
+    exit 1
+else
+    echo -e "$out_str"
+fi
