@@ -1,6 +1,18 @@
 # nfs-util
 Script that greatly simplifies creating nfs shares, by creating a string which you can ship directly to your exports file. This script has the capabilities to allow infinite hosts specified so you can simply specify the parameters of your nfs share once and fire away.
 
+## Install
+```bash
+git clone https://github.com/rawleyfowler/nfs-util.git
+cd nfs-util
+sudo make install
+```
+
+## Uninstall
+```bash
+sudo make uninstall
+```
+
 ## Usage
 ```bash
 -d Directory to share to the host(s).
