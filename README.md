@@ -22,6 +22,6 @@ sudo make uninstall
 -p The permissions to give to the host(s).
 ```
 
-<b>EXAMPLE USAGE</b>: `nfs-util /mnt/nfs_share -t -n my_server_1 -p 'no_root_squash,rw,sync,no_subtree_check'`
+<b>EXAMPLE USAGE</b>: `nfs-util -d /mnt/nfs_share -t -n my_server_1 -p 'no_root_squash,rw,sync,no_subtree_check'`
 
 <b>NOTE</b>: permissions default to `(rw,sync,no_subtree_check)`
