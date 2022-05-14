@@ -14,7 +14,7 @@ sudo make uninstall
 ```
 
 ## Usage
-```bash
+```
 -d Directory to share to the host(s).
 -h Display this usage message.
 -n HOST,[HOST1,HOST2,HOSTn] Specify the host names, or IP's at which to share to.
