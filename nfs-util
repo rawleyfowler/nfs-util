@@ -1,4 +1,5 @@
-#!/bin/bash # By: Rawley Fowler <rawley.xzy>
+#!/bin/bash 
+# By: Rawley Fowler <rawley.xzy>
 # This program is licensed under the GPL v3.0, please read the license for details. You should have a copy of the GPL v3.0 attached.
 # Purpose: This tool creates nfs share record lines.
 # Usage: nfs-util DIR HOST1 [HOST2 .. HOSTn] [PERMISSIONS]
