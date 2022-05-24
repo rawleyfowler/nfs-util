@@ -65,7 +65,7 @@ for h in ${host_slug}; do
 done
 
 # If we haven't added any new systems.
-if [ "$out_str" != "$nfs_dir\t" ]; then
+if [ "$out_str" = "$nfs_dir\t" ]; then
     echo -e "No systems passed the network test :("
     exit 1
 else
